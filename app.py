@@ -2,6 +2,7 @@ from math import sin, cos, sqrt, atan2, radians
 import requests
 import json
 
+from bson import ObjectId
 from flask import Flask, request, jsonify
 import pymongo
 import pandas as pd
@@ -32,14 +33,15 @@ def getAddresses():
 @app.route('/api/getResult', methods=['GET'])
 def getResult():
     result_id = request.args.get('result_id')
-    result_cursor = get_points_and_links_from_db(result_id)
-    result_list = list(result_cursor)
-    return jsonify(result_list[0])
+    result_dict = get_points_and_links_from_db(result_id)
+    return jsonify(result_dict)
 
 
 def get_points_and_links_from_db(result_id):
     points_and_links_collection = get_points_and_links_collection("dokka_db")
-    return points_and_links_collection.find({"_id": result_id})
+    points_and_links_document = points_and_links_collection.find({"_id": ObjectId(result_id)})
+    points_and_links_list = list(points_and_links_document)[0]
+    return {"points": points_and_links_list['points'], "links": points_and_links_list['links'], "result_id": result_id}
 
 
 def get_point_address(latitude, longitude):

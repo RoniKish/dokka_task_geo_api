@@ -12,12 +12,12 @@ def post_request_example():
         print(json.loads(response.text))
 
 
-def get_request_example():
-    payload = {'result_id': 'test', 'key2': 'value2'}
+def get_request_example(_id):
+    payload = {'result_id': _id}
     response = requests.get(url + "getResult", params=payload)
     print(json.loads(response.text))
 
 
 if __name__ == '__main__':
     post_request_example()
-    get_request_example()
+    # get_request_example("_id")
